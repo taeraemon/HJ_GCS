@@ -63,7 +63,7 @@
      <string>Refresh</string>
     </property>
    </widget>
-   <widget class="PlotWidget" name="plot_mag_zx" native="true">
+   <widget class="PlotWidget" name="PLOT_ROLL" native="true">
     <property name="geometry">
      <rect>
       <x>20</x>
@@ -76,7 +76,7 @@
    <widget class="QPushButton" name="PB_TX_CALI">
     <property name="geometry">
      <rect>
-      <x>330</x>
+      <x>940</x>
       <y>20</y>
       <width>140</width>
       <height>40</height>
@@ -93,6 +93,26 @@
       <y>380</y>
       <width>300</width>
       <height>90</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="PlotWidget" name="PLOT_PITCH" native="true">
+    <property name="geometry">
+     <rect>
+      <x>320</x>
+      <y>20</y>
+      <width>300</width>
+      <height>200</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="PlotWidget" name="PLOT_YAW" native="true">
+    <property name="geometry">
+     <rect>
+      <x>620</x>
+      <y>20</y>
+      <width>300</width>
+      <height>200</height>
      </rect>
     </property>
    </widget>
