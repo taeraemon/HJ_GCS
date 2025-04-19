@@ -1,5 +1,5 @@
 from PyQt5.QtSerialPort import QSerialPort
-from PyQt5.QtCore import QIODevice, QObject
+from PyQt5.QtCore import QIODevice, QObject, QTimer
 from PyQt5.QtWidgets import QMessageBox
 import json
 from datetime import datetime
@@ -14,6 +14,16 @@ class HandlerCommUMB(QObject):
         self.serial_port = QSerialPort()
         self.serial_connected = False
         self.buffer = b""
+        
+        # 데이터 수신 속도 측정을 위한 변수들
+        self.packet_count = 0
+        self.last_packet_count = 0
+        self.last_update_time = datetime.now()
+        
+        # 1초마다 속도 업데이트하는 타이머
+        self.rate_timer = QTimer()
+        self.rate_timer.timeout.connect(self._update_rate)
+        self.rate_timer.start(1000)  # 1초 간격
 
     def connect_serial(self, port_name, baudrate):
         """
@@ -31,6 +41,10 @@ class HandlerCommUMB(QObject):
                 self.serial_connected = True
                 self.controller.ui.PB_UMB_SER_CONN.setText("Connected!")
                 self.serial_port.readyRead.connect(self._handle_ready_read)
+                # 연결 시 카운터 초기화
+                self.packet_count = 0
+                self.last_packet_count = 0
+                self.last_update_time = datetime.now()
                 return True
             else:
                 QMessageBox.critical(self.controller.ui, "Error", "Failed to open UMB serial port.")
@@ -41,6 +55,25 @@ class HandlerCommUMB(QObject):
             self.serial_port.close()
             self.controller.ui.PB_UMB_SER_CONN.setText("Connect\nSerial")
             return False
+
+    def _update_rate(self):
+        """
+        1초마다 호출되어 데이터 수신 속도를 계산하고 UI에 표시
+        """
+        if not self.serial_connected:
+            return
+            
+        current_time = datetime.now()
+        time_diff = (current_time - self.last_update_time).total_seconds()
+        
+        if time_diff > 0:
+            rate = (self.packet_count - self.last_packet_count) / time_diff
+            self.controller.ui.LB_UMB_RATE.setText(f"{rate:.1f} Hz")
+            
+            # 속도 계산 후 카운터 리셋 (오버플로우 방지)
+            self.last_packet_count = 0
+            self.packet_count = 0
+            self.last_update_time = current_time
 
     def _handle_ready_read(self):
         """
@@ -77,6 +110,9 @@ class HandlerCommUMB(QObject):
                 pitch = values[1],
                 yaw   = values[2],
             )
+
+            # 데이터 수신 카운터 증가
+            self.packet_count += 1
 
             # 핵심: CoreController에 전달
             self.controller.on_umb_data_received(umb_data)

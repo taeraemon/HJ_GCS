@@ -152,7 +152,7 @@
      <bool>false</bool>
     </property>
    </widget>
-   <widget class="QLabel" name="label_7">
+   <widget class="QLabel" name="LB_UMB_RATE">
     <property name="geometry">
      <rect>
       <x>620</x>
