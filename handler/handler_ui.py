@@ -12,7 +12,7 @@ class HandlerUI(QMainWindow, form_class):
     def __init__(self):
         super().__init__()
         self.setupUi(self)
-        self.setFixedSize(1400, 900)
+        # self.setFixedSize(1920, 1080)
 
         self.controller = None    # CoreController 연결용
         self._connect_ui_events() # 버튼 클릭 등 이벤트 연결
