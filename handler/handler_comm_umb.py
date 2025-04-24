@@ -91,7 +91,7 @@ class HandlerCommUMB(QObject):
                 else:
                     self._append_debug_message(line)
             except Exception as e:
-                print(f"[UMB] Error while reading serial data: {e}")
+                self._append_debug_message(f"[UMB] Error while reading serial data: {e}")
 
     def _handle_csv_packet(self, line):
         """
@@ -128,15 +128,5 @@ class HandlerCommUMB(QObject):
         """
         TE_GCS_DEBUG에 한 줄씩 출력 (최대 100줄 유지)
         """
-        text_edit = self.controller.ui.TE_GCS_DEBUG
-        existing_text = text_edit.toPlainText()
-        lines = existing_text.split('\n')
-
-        if len(lines) >= 100:
-            lines = lines[-99:]
-
-        curr_time = datetime.now().strftime("%H:%M:%S.%f")[:-3]
-        lines.append(f"{curr_time} : {line}")
-
-        text_edit.setPlainText('\n'.join(lines).strip())
-        text_edit.verticalScrollBar().setValue(text_edit.verticalScrollBar().maximum())
+        # 컨트롤러의 메서드를 호출
+        self.controller._append_debug_message(line)

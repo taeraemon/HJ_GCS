@@ -1,4 +1,5 @@
 from PyQt5.QtCore import QTimer
+from datetime import datetime
 
 from handler.handler_ui import HandlerUI
 from handler.handler_comm_umb import HandlerCommUMB
@@ -71,8 +72,8 @@ class CoreController:
             self.umb_data_history.pop(0)
         
         # 디버그 출력
-        print(f"[CORE] UMB Data received: {data.timestamp} | "
-              f"RPY: {data.nav_roll:.2f}, {data.nav_pitch:.2f}, {data.nav_yaw:.2f}")
+        self._append_vehicle_status(f"[CORE] UMB Data received: {data.timestamp} | "
+                                  f"RPY: {data.nav_roll:.2f}, {data.nav_pitch:.2f}, {data.nav_yaw:.2f}")
               
         # 현재 액티브 소스가 UMB면 데이터 처리 (GUI 업데이트)
         if self.active_source == 'UMB':
@@ -96,8 +97,8 @@ class CoreController:
             self.tlm_data_history.pop(0)
         
         # 디버그 출력
-        print(f"[CORE] TLM Data received: {data.timestamp} | "
-              f"RPY: {data.nav_roll:.2f}, {data.nav_pitch:.2f}, {data.nav_yaw:.2f}")
+        self._append_vehicle_status(f"[CORE] TLM Data received: {data.timestamp} | "
+                                  f"RPY: {data.nav_roll:.2f}, {data.nav_pitch:.2f}, {data.nav_yaw:.2f}")
               
         # 현재 액티브 소스가 TLM이면 데이터 처리 (GUI 업데이트)
         if self.active_source == 'TLM':
@@ -106,8 +107,8 @@ class CoreController:
 
     def on_gse_data_received(self, data):
         # GSE 데이터 처리
-        print(f"[CORE] GSE Data received: {data.timestamp} | "
-              f"RPY: {data.roll:.2f}, {data.pitch:.2f}, {data.yaw:.2f}")
+        self._append_vehicle_status(f"[CORE] GSE Data received: {data.timestamp} | "
+                                  f"RPY: {data.roll:.2f}, {data.pitch:.2f}, {data.yaw:.2f}")
         pass
 
     def _log_data(self, data, source):
@@ -188,10 +189,44 @@ class CoreController:
         """
         if source in ['UMB', 'TLM']:
             self.active_source = source
-            print(f"[CORE] Active Source changed to: {source}")
+            self._append_debug_message(f"[CORE] Active Source changed to: {source}")
             
             # 마지막 수신된 데이터가 있으면 바로 UI 업데이트
             if source == 'UMB' and self.last_umb_data:
                 self.process_vehicle_data(self.last_umb_data)
             elif source == 'TLM' and self.last_tlm_data:
                 self.process_vehicle_data(self.last_tlm_data)
+
+    def _append_debug_message(self, line):
+        """
+        TE_GCS_DEBUG에 한 줄씩 출력 (최대 100줄 유지)
+        """
+        text_edit = self.ui.TE_GCS_DEBUG
+        existing_text = text_edit.toPlainText()
+        lines = existing_text.split('\n')
+
+        if len(lines) >= 100:
+            lines = lines[-99:]
+
+        curr_time = datetime.now().strftime("%H:%M:%S.%f")[:-3]
+        lines.append(f"{curr_time} : {line}")
+
+        text_edit.setPlainText('\n'.join(lines).strip())
+        text_edit.verticalScrollBar().setValue(text_edit.verticalScrollBar().maximum())
+
+    def _append_vehicle_status(self, line):
+        """
+        TE_VEHICLE_STATUS에 한 줄씩 출력 (최대 100줄 유지)
+        """
+        text_edit = self.ui.TE_VEHICLE_STATUS
+        existing_text = text_edit.toPlainText()
+        lines = existing_text.split('\n')
+
+        if len(lines) >= 100:
+            lines = lines[-99:]
+
+        curr_time = datetime.now().strftime("%H:%M:%S.%f")[:-3]
+        lines.append(f"{curr_time} : {line}")
+
+        text_edit.setPlainText('\n'.join(lines).strip())
+        text_edit.verticalScrollBar().setValue(text_edit.verticalScrollBar().maximum())

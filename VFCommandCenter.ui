@@ -240,7 +240,7 @@
      <bool>false</bool>
     </property>
    </widget>
-   <widget class="QTextEdit" name="TE_VEHICLE_DEBUG">
+   <widget class="QTextEdit" name="TE_VEHICLE_STATUS">
     <property name="geometry">
      <rect>
       <x>1590</x>
@@ -266,7 +266,7 @@
      <enum>QFrame::Plain</enum>
     </property>
     <property name="text">
-     <string>Vehicle Debug</string>
+     <string>Vehicle Status</string>
     </property>
     <property name="wordWrap">
      <bool>false</bool>
