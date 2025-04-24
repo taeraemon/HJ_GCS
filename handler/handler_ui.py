@@ -33,38 +33,46 @@ class HandlerUI(QMainWindow, form_class):
         self.PB_GSE_SER_CONN.clicked.connect(self.on_gse_serial_connect_clicked)
         self.PB_GSE_SER_REFRESH.clicked.connect(self.refresh_gse_ports)
 
+        # 버튼 초기 상태 설정
+        self.PB_UMB_SER_CONN.setCheckable(True)
+        self.PB_TLM_SER_CONN.setCheckable(True)
+        self.PB_GSE_SER_CONN.setCheckable(True)
+
     # ===== UMB 시리얼 연결 처리 =====
     def on_umb_serial_connect_clicked(self):
         if self.controller:
-            port = self.CB_UMB_SER_PORT.currentData()
-            baud = int(self.LE_UMB_SER_BAUD.text())
-            success = self.controller.umb_handler.connect_serial(port, baud)
-            if success:
-                self.PB_UMB_SER_CONN.setText("Connected!")
+            if self.PB_UMB_SER_CONN.isChecked():
+                port = self.CB_UMB_SER_PORT.currentData()
+                baud = int(self.LE_UMB_SER_BAUD.text())
+                success = self.controller.umb_handler.connect_serial(port, baud)
+                if not success:
+                    self.PB_UMB_SER_CONN.setChecked(False)
             else:
-                self.PB_UMB_SER_CONN.setText("Connect\nSerial")
+                self.controller.umb_handler.connect_serial("", 0)  # 연결 해제
 
     # ===== TLM 시리얼 연결 처리 =====
     def on_tlm_serial_connect_clicked(self):
         if self.controller:
-            port = self.CB_TLM_SER_PORT.currentData()
-            baud = int(self.LE_TLM_SER_BAUD.text())
-            success = self.controller.tlm_handler.connect_serial(port, baud)
-            if success:
-                self.PB_TLM_SER_CONN.setText("Connected!")
+            if self.PB_TLM_SER_CONN.isChecked():
+                port = self.CB_TLM_SER_PORT.currentData()
+                baud = int(self.LE_TLM_SER_BAUD.text())
+                success = self.controller.tlm_handler.connect_serial(port, baud)
+                if not success:
+                    self.PB_TLM_SER_CONN.setChecked(False)
             else:
-                self.PB_TLM_SER_CONN.setText("Connect\nSerial")
+                self.controller.tlm_handler.connect_serial("", 0)  # 연결 해제
 
     # ===== GSE 시리얼 연결 처리 =====
     def on_gse_serial_connect_clicked(self):
         if self.controller:
-            port = self.CB_GSE_SER_PORT.currentData()
-            baud = int(self.LE_GSE_SER_BAUD.text())
-            success = self.controller.gse_handler.connect_serial(port, baud)
-            if success:
-                self.PB_GSE_SER_CONN.setText("Connected!")
+            if self.PB_GSE_SER_CONN.isChecked():
+                port = self.CB_GSE_SER_PORT.currentData()
+                baud = int(self.LE_GSE_SER_BAUD.text())
+                success = self.controller.gse_handler.connect_serial(port, baud)
+                if not success:
+                    self.PB_GSE_SER_CONN.setChecked(False)
             else:
-                self.PB_GSE_SER_CONN.setText("Connect\nSerial")
+                self.controller.gse_handler.connect_serial("", 0)  # 연결 해제
 
     # ===== UMB 시리얼 포트 목록 갱신 =====
     def refresh_umb_ports(self):
