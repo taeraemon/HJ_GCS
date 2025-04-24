@@ -44,8 +44,6 @@ class CoreController:
 
         # 데이터 소스 관리 변수 - 기본값을 'UMB'로 설정
         self.active_source = 'UMB'
-        # 초기 상태 업데이트
-        self.ui.LB_DATA_SOURCE.setText(self.active_source)
         
         # 플롯 업데이트 타이머 설정 (10Hz)
         self.plot_timer = QTimer()
@@ -190,7 +188,6 @@ class CoreController:
         """
         if source in ['UMB', 'TLM']:
             self.active_source = source
-            self.ui.LB_DATA_SOURCE.setText(source)
             print(f"[CORE] Active Source changed to: {source}")
             
             # 마지막 수신된 데이터가 있으면 바로 UI 업데이트

@@ -126,9 +126,9 @@ class HandlerCommUMB(QObject):
 
     def _append_debug_message(self, line):
         """
-        TE_UMB_RX_DEBUG에 한 줄씩 출력 (최대 100줄 유지)
+        TE_GCS_DEBUG에 한 줄씩 출력 (최대 100줄 유지)
         """
-        text_edit = self.controller.ui.TE_UMB_RX_DEBUG
+        text_edit = self.controller.ui.TE_GCS_DEBUG
         existing_text = text_edit.toPlainText()
         lines = existing_text.split('\n')
 

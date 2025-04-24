@@ -128,18 +128,17 @@ class HandlerCommGSE(QObject):
 
     def _append_debug_message(self, line):
         """
-        TE_GSE_RX_DEBUG에 한 줄씩 출력 (최대 100줄 유지)
+        TE_GCS_DEBUG에 한 줄씩 출력 (최대 100줄 유지)
         """
-        # text_edit = self.controller.ui.TE_GSE_RX_DEBUG
-        # existing_text = text_edit.toPlainText()
-        # lines = existing_text.split('\n')
+        text_edit = self.controller.ui.TE_GCS_DEBUG
+        existing_text = text_edit.toPlainText()
+        lines = existing_text.split('\n')
 
-        # if len(lines) >= 100:
-        #     lines = lines[-99:]
+        if len(lines) >= 100:
+            lines = lines[-99:]
 
-        # curr_time = datetime.now().strftime("%H:%M:%S.%f")[:-3]
-        # lines.append(f"{curr_time} : {line}")
+        curr_time = datetime.now().strftime("%H:%M:%S.%f")[:-3]
+        lines.append(f"{curr_time} : {line}")
 
-        # text_edit.setPlainText('\n'.join(lines).strip())
-        # text_edit.verticalScrollBar().setValue(text_edit.verticalScrollBar().maximum())
-        print(line)
+        text_edit.setPlainText('\n'.join(lines).strip())
+        text_edit.verticalScrollBar().setValue(text_edit.verticalScrollBar().maximum())
