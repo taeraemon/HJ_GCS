@@ -463,6 +463,16 @@
        <bool>false</bool>
       </property>
      </widget>
+     <widget class="QOpenGLWidget" name="openGLWidget">
+      <property name="geometry">
+       <rect>
+        <x>889</x>
+        <y>259</y>
+        <width>481</width>
+        <height>381</height>
+       </rect>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="tab_3">
      <attribute name="title">

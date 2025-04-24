@@ -1,7 +1,8 @@
-from PyQt5.QtWidgets import QMainWindow
+from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget
 from PyQt5 import uic
 from PyQt5.QtSerialPort import QSerialPortInfo
 import os
+from handler.handler_plot_3d import HandlerPlot3D
 
 # ===== UI 파일 로딩 =====
 UI_PATH = os.path.join(os.path.dirname(__file__), "../VFCommandCenter.ui")
@@ -19,6 +20,24 @@ class HandlerUI(QMainWindow, form_class):
         self.refresh_umb_ports()  # 프로그램 시작 시 1회 호출
         self.refresh_tlm_ports()  # TLM 포트 목록 갱신
         self.refresh_gse_ports()  # GSE 포트 목록 갱신
+
+        # 3D 자세 시각화 추가
+        self.attitude_visualizer = HandlerPlot3D()
+        # openGLWidget을 3D 자세 시각화로 대체
+        container = QWidget()
+        container_layout = QVBoxLayout(container)
+        container_layout.setContentsMargins(0, 0, 0, 0)
+        container_layout.addWidget(self.attitude_visualizer)
+        
+        # tabWidget의 tab_2에 있는 openGLWidget을 제거하고 새 컨테이너로 대체
+        for i in range(self.tabWidget.count()):
+            if self.tabWidget.tabText(i) == "Tab 2":
+                tab = self.tabWidget.widget(i)
+                old_geo = self.openGLWidget.geometry()
+                self.openGLWidget.setParent(None)
+                container.setGeometry(old_geo)
+                container.setParent(tab)
+                break
 
     # ===== 컨트롤러 연결 함수 =====
     def set_controller(self, controller):
@@ -100,3 +119,7 @@ class HandlerUI(QMainWindow, form_class):
             self.CB_GSE_SER_PORT.addItem(f"{port.portName()} - {port.description()}", port.portName())
         if not port_list:
             self.CB_GSE_SER_PORT.addItem("No Ports")
+
+    def update_attitude(self, roll, pitch, yaw):
+        """자세 데이터를 업데이트하고 3D 시각화를 갱신합니다."""
+        self.attitude_visualizer.update_attitude(roll, pitch, yaw)

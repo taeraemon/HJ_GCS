@@ -50,6 +50,11 @@ class CoreController:
         """
         # 데이터 저장 (최대 1000개 유지)
         self.umb_data_history.append(data)
+        
+        # 3D 자세 시각화 업데이트
+        self.ui.update_attitude(data.roll, data.pitch, data.yaw)
+
+        # 데이터 저장 (최대 1000개 유지)
         if len(self.umb_data_history) > 1000:
             self.umb_data_history.pop(0)
             self.last_plot_index = max(0, self.last_plot_index - 1)
