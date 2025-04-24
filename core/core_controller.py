@@ -135,6 +135,19 @@ class CoreController:
         - 상태 표시창 업데이트
         마지막으로 plot에 반영된 이후의 모든 데이터를 순차적으로 시각화
         """
+        # TODO: 현재 보고 있는 탭만 UI 업데이트하도록 최적화
+        # 1. update_plots() 메서드에 현재 활성화된 탭 확인 코드 추가:
+        #    current_tab = self.ui.tabWidget.currentIndex()
+        #
+        # 2. 탭 인덱스에 따라 조건부로 UI 요소 업데이트:
+        #    if current_tab == 1:  # Tab 2 (자세 데이터가 있는 탭)
+        #        # 플롯 업데이트 코드
+        #        # 3D 자세 시각화 업데이트 코드
+        #    elif current_tab == 2:  # Tab 3 (다른 기능 탭이 있다면)
+        #        # 해당 탭의 UI 요소 업데이트 코드
+        #
+        # 3. 데이터는 계속 수집하되 UI 업데이트만 조건부로 실행
+        # 4. 모든 탭에 필요한 공통 UI 요소(상태 표시창 등)는 항상 업데이트
         total_data = len(self.vehicle_data_history)
 
         # 새로운 데이터가 없다면 종료
