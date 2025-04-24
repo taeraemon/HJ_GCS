@@ -61,6 +61,7 @@ class HandlerCommUMB(QObject):
         1초마다 호출되어 데이터 수신 속도를 계산하고 UI에 표시
         """
         if not self.serial_connected:
+            self.controller.ui.LB_UMB_RATE.setText("0.0 Hz")
             return
             
         current_time = datetime.now()

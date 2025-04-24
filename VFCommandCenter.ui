@@ -146,7 +146,7 @@
      <enum>QFrame::Plain</enum>
     </property>
     <property name="text">
-     <string>Launch Pad</string>
+     <string>GSE</string>
     </property>
     <property name="wordWrap">
      <bool>false</bool>
@@ -174,7 +174,7 @@
      <bool>false</bool>
     </property>
    </widget>
-   <widget class="QLabel" name="label_8">
+   <widget class="QLabel" name="LB_TLM_RATE">
     <property name="geometry">
      <rect>
       <x>620</x>
@@ -196,7 +196,7 @@
      <bool>false</bool>
     </property>
    </widget>
-   <widget class="QLabel" name="label_9">
+   <widget class="QLabel" name="LB_GSE_RATE">
     <property name="geometry">
      <rect>
       <x>620</x>
@@ -539,6 +539,104 @@
     </property>
     <property name="wordWrap">
      <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="PB_TLM_SER_REFRESH">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>80</y>
+      <width>50</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Refresh</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="LE_TLM_SER_BAUD">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>80</y>
+      <width>50</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>115200</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="PB_TLM_SER_CONN">
+    <property name="geometry">
+     <rect>
+      <x>490</x>
+      <y>80</y>
+      <width>100</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Connect Serial</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="CB_TLM_SER_PORT">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>80</y>
+      <width>200</width>
+      <height>20</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="PB_GSE_SER_REFRESH">
+    <property name="geometry">
+     <rect>
+      <x>160</x>
+      <y>140</y>
+      <width>50</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Refresh</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="LE_GSE_SER_BAUD">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>140</y>
+      <width>50</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>115200</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="PB_GSE_SER_CONN">
+    <property name="geometry">
+     <rect>
+      <x>490</x>
+      <y>140</y>
+      <width>100</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Connect Serial</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="CB_GSE_SER_PORT">
+    <property name="geometry">
+     <rect>
+      <x>220</x>
+      <y>140</y>
+      <width>200</width>
+      <height>20</height>
+     </rect>
     </property>
    </widget>
   </widget>

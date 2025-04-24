@@ -2,6 +2,8 @@ from PyQt5.QtCore import QTimer
 
 from handler.handler_ui import HandlerUI
 from handler.handler_comm_umb import HandlerCommUMB
+from handler.handler_comm_tlm import HandlerCommTLM
+from handler.handler_comm_gse import HandlerCommGSE
 from handler.handler_plot import HandlerPlot
 # from handler.handler_log import HandlerLog
 from utils.data_types import DataUMB
@@ -14,6 +16,8 @@ class CoreController:
         # ============================
         self.ui = HandlerUI()
         self.umb_handler = HandlerCommUMB(self)
+        self.tlm_handler = HandlerCommTLM(self)
+        self.gse_handler = HandlerCommGSE(self)
         # self.log_handler = HandlerLog()
 
         # 플롯 핸들러 (Qt Designer에서 설정한 objectName 기준)
@@ -56,6 +60,18 @@ class CoreController:
         # 디버그 출력
         print(f"[CORE] UMB Data received: {data.timestamp} | "
               f"RPY: {data.roll:.2f}, {data.pitch:.2f}, {data.yaw:.2f}")
+
+    def on_tlm_data_received(self, data):
+        # TLM 데이터 처리
+        print(f"[CORE] TLM Data received: {data.timestamp} | "
+              f"RPY: {data.roll:.2f}, {data.pitch:.2f}, {data.yaw:.2f}")
+        pass
+
+    def on_gse_data_received(self, data):
+        # GSE 데이터 처리
+        print(f"[CORE] GSE Data received: {data.timestamp} | "
+              f"RPY: {data.roll:.2f}, {data.pitch:.2f}, {data.yaw:.2f}")
+        pass
 
     def update_plots(self):
         """

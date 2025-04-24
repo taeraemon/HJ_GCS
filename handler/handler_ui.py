@@ -17,6 +17,8 @@ class HandlerUI(QMainWindow, form_class):
         self.controller = None    # CoreController 연결용
         self._connect_ui_events() # 버튼 클릭 등 이벤트 연결
         self.refresh_umb_ports()  # 프로그램 시작 시 1회 호출
+        self.refresh_tlm_ports()  # TLM 포트 목록 갱신
+        self.refresh_gse_ports()  # GSE 포트 목록 갱신
 
     # ===== 컨트롤러 연결 함수 =====
     def set_controller(self, controller):
@@ -26,6 +28,10 @@ class HandlerUI(QMainWindow, form_class):
     def _connect_ui_events(self):
         self.PB_UMB_SER_CONN.clicked.connect(self.on_umb_serial_connect_clicked)
         self.PB_UMB_SER_REFRESH.clicked.connect(self.refresh_umb_ports)
+        self.PB_TLM_SER_CONN.clicked.connect(self.on_tlm_serial_connect_clicked)
+        self.PB_TLM_SER_REFRESH.clicked.connect(self.refresh_tlm_ports)
+        self.PB_GSE_SER_CONN.clicked.connect(self.on_gse_serial_connect_clicked)
+        self.PB_GSE_SER_REFRESH.clicked.connect(self.refresh_gse_ports)
 
     # ===== UMB 시리얼 연결 처리 =====
     def on_umb_serial_connect_clicked(self):
@@ -38,12 +44,51 @@ class HandlerUI(QMainWindow, form_class):
             else:
                 self.PB_UMB_SER_CONN.setText("Connect\nSerial")
 
+    # ===== TLM 시리얼 연결 처리 =====
+    def on_tlm_serial_connect_clicked(self):
+        if self.controller:
+            port = self.CB_TLM_SER_PORT.currentData()
+            baud = int(self.LE_TLM_SER_BAUD.text())
+            success = self.controller.tlm_handler.connect_serial(port, baud)
+            if success:
+                self.PB_TLM_SER_CONN.setText("Connected!")
+            else:
+                self.PB_TLM_SER_CONN.setText("Connect\nSerial")
+
+    # ===== GSE 시리얼 연결 처리 =====
+    def on_gse_serial_connect_clicked(self):
+        if self.controller:
+            port = self.CB_GSE_SER_PORT.currentData()
+            baud = int(self.LE_GSE_SER_BAUD.text())
+            success = self.controller.gse_handler.connect_serial(port, baud)
+            if success:
+                self.PB_GSE_SER_CONN.setText("Connected!")
+            else:
+                self.PB_GSE_SER_CONN.setText("Connect\nSerial")
+
     # ===== UMB 시리얼 포트 목록 갱신 =====
     def refresh_umb_ports(self):
         self.CB_UMB_SER_PORT.clear()
         port_list = QSerialPortInfo.availablePorts()
         for port in port_list:
-            # self.CB_UMB_SER_PORT.addItem(port.portName())
             self.CB_UMB_SER_PORT.addItem(f"{port.portName()} - {port.description()}", port.portName())
         if not port_list:
             self.CB_UMB_SER_PORT.addItem("No Ports")
+
+    # ===== TLM 시리얼 포트 목록 갱신 =====
+    def refresh_tlm_ports(self):
+        self.CB_TLM_SER_PORT.clear()
+        port_list = QSerialPortInfo.availablePorts()
+        for port in port_list:
+            self.CB_TLM_SER_PORT.addItem(f"{port.portName()} - {port.description()}", port.portName())
+        if not port_list:
+            self.CB_TLM_SER_PORT.addItem("No Ports")
+
+    # ===== GSE 시리얼 포트 목록 갱신 =====
+    def refresh_gse_ports(self):
+        self.CB_GSE_SER_PORT.clear()
+        port_list = QSerialPortInfo.availablePorts()
+        for port in port_list:
+            self.CB_GSE_SER_PORT.addItem(f"{port.portName()} - {port.description()}", port.portName())
+        if not port_list:
+            self.CB_GSE_SER_PORT.addItem("No Ports")
