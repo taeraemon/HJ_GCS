@@ -35,6 +35,7 @@ class CoreController:
         # 마지막 수신된 데이터 저장
         self.last_umb_data = None
         self.last_tlm_data = None
+        self.last_gse_data = None
         self.last_vehicle_data = None
 
         # 모든 데이터를 각각 저장
@@ -71,10 +72,6 @@ class CoreController:
         if len(self.umb_data_history) > 1000:
             self.umb_data_history.pop(0)
         
-        # 디버그 출력
-        self._append_vehicle_status(f"[CORE] UMB Data received: {data.timestamp} | "
-                                  f"RPY: {data.nav_roll:.2f}, {data.nav_pitch:.2f}, {data.nav_yaw:.2f}")
-              
         # 현재 액티브 소스가 UMB면 데이터 처리 (GUI 업데이트)
         if self.active_source == 'UMB':
             # GUI 업데이트 
@@ -96,10 +93,6 @@ class CoreController:
         if len(self.tlm_data_history) > 1000:
             self.tlm_data_history.pop(0)
         
-        # 디버그 출력
-        self._append_vehicle_status(f"[CORE] TLM Data received: {data.timestamp} | "
-                                  f"RPY: {data.nav_roll:.2f}, {data.nav_pitch:.2f}, {data.nav_yaw:.2f}")
-              
         # 현재 액티브 소스가 TLM이면 데이터 처리 (GUI 업데이트)
         if self.active_source == 'TLM':
             # GUI 업데이트
@@ -107,9 +100,8 @@ class CoreController:
 
     def on_gse_data_received(self, data):
         # GSE 데이터 처리
-        self._append_vehicle_status(f"[CORE] GSE Data received: {data.timestamp} | "
-                                  f"RPY: {data.roll:.2f}, {data.pitch:.2f}, {data.yaw:.2f}")
-        pass
+        # GSE 데이터는 별도로 저장
+        self.last_gse_data = data
 
     def _log_data(self, data, source):
         """
@@ -140,6 +132,7 @@ class CoreController:
         10Hz 타이머에 의해 주기적으로 호출됨
         - 새로운 데이터를 모두 plot에 반영
         - 3D 자세 시각화 업데이트
+        - 상태 표시창 업데이트
         마지막으로 plot에 반영된 이후의 모든 데이터를 순차적으로 시각화
         """
         total_data = len(self.vehicle_data_history)
@@ -165,6 +158,13 @@ class CoreController:
                 self.last_vehicle_data.nav_pitch,
                 self.last_vehicle_data.nav_yaw
             )
+            
+            # 상태 표시창 업데이트 - 최신 데이터로
+            self.update_status_vehicle(self.last_vehicle_data, f"{self.active_source} Data")
+            
+        # GSE 데이터가 있다면 해당 상태도 업데이트  # TODO : 추후 구현
+        if hasattr(self, 'last_gse_data') and self.last_gse_data:
+            self.update_status_gse(self.last_gse_data, "GSE Data")
 
     def get_umb_data_history(self):
         """UMB 데이터 히스토리 반환 (로그 저장 등에 활용)"""
@@ -214,19 +214,67 @@ class CoreController:
         text_edit.setPlainText('\n'.join(lines).strip())
         text_edit.verticalScrollBar().setValue(text_edit.verticalScrollBar().maximum())
 
-    def _append_vehicle_status(self, line):
+    def update_status_vehicle(self, data: DataVehicle, message: str):
         """
-        TE_VEHICLE_STATUS에 한 줄씩 출력 (최대 100줄 유지)
+        TE_VEHICLE_STATUS에 차량 상태 데이터를 JSON 형식으로 표시
+        이전 내용을 지우고 현재 상태만 표시함
         """
         text_edit = self.ui.TE_VEHICLE_STATUS
-        existing_text = text_edit.toPlainText()
-        lines = existing_text.split('\n')
-
-        if len(lines) >= 100:
-            lines = lines[-99:]
-
+        
+        # 현재 스크롤바 위치 저장
+        scrollbar = text_edit.verticalScrollBar()
+        scroll_position = scrollbar.value()
+        
+        # 현재 시간 포맷
         curr_time = datetime.now().strftime("%H:%M:%S.%f")[:-3]
-        lines.append(f"{curr_time} : {line}")
+        
+        # JSON 형식으로 데이터 표시
+        json_like_data = (
+            f"[{curr_time}] [CORE] {message}:\n"
+            f"  timestamp: {data.timestamp}\n"
+            f"  source: {data.source}\n"
+            f"  attitude: {{\n"
+            f"    roll: {data.nav_roll:.2f}°,\n"
+            f"    pitch: {data.nav_pitch:.2f}°,\n"
+            f"    yaw: {data.nav_yaw:.2f}°\n"
+            f"  }}"
+        )
+        
+        # 이전 내용을 지우고 현재 상태만 표시
+        text_edit.setPlainText(json_like_data)
+        
+        # 사용자가 수동으로 스크롤했으면 그 위치를 유지, 아니면 맨 위로 스크롤
+        if scroll_position > 0:
+            scrollbar.setValue(scroll_position)
 
-        text_edit.setPlainText('\n'.join(lines).strip())
-        text_edit.verticalScrollBar().setValue(text_edit.verticalScrollBar().maximum())
+    def update_status_gse(self, data, message: str):
+        """
+        TE_VEHICLE_STATUS에 GSE 상태 데이터를 JSON 형식으로 표시
+        이전 내용을 지우고 현재 상태만 표시함 (추후 구현)
+        """
+        text_edit = self.ui.TE_VEHICLE_STATUS
+        
+        # 현재 스크롤바 위치 저장
+        scrollbar = text_edit.verticalScrollBar()
+        scroll_position = scrollbar.value()
+        
+        # 현재 시간 포맷
+        curr_time = datetime.now().strftime("%H:%M:%S.%f")[:-3]
+        
+        # JSON 형식으로 GSE 데이터 표시 (기본 구조만 작성)
+        json_like_data = (
+            f"[{curr_time}] [CORE] {message}:\n"
+            f"  timestamp: {data.timestamp}\n"
+            f"  attitude: {{\n"
+            f"    roll: {data.roll:.2f}°,\n"
+            f"    pitch: {data.pitch:.2f}°,\n"
+            f"    yaw: {data.yaw:.2f}°\n"
+            f"  }}"
+        )
+        
+        # 이전 내용을 지우고 현재 상태만 표시
+        text_edit.setPlainText(json_like_data)
+        
+        # 사용자가 수동으로 스크롤했으면 그 위치를 유지, 아니면 맨 위로 스크롤
+        if scroll_position > 0:
+            scrollbar.setValue(scroll_position)
