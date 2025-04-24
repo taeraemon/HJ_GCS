@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QMessageBox
 import json
 from datetime import datetime
 
-from utils.data_types import DataTLM
+from utils.data_types import DataVehicle
 
 
 class HandlerCommTLM(QObject):
@@ -89,7 +89,7 @@ class HandlerCommTLM(QObject):
                 if ',' in line:
                     self._handle_csv_packet(line)
                 else:
-                    self._handle_debug_message(line)
+                    self._append_debug_message(line)
             except Exception as e:
                 print(f"[TLM] Error while reading serial data: {e}")
 
@@ -105,11 +105,12 @@ class HandlerCommTLM(QObject):
 
             values = list(map(float, parts[:3]))
 
-            tlm_data = DataTLM(
+            tlm_data = DataVehicle(
                 timestamp=datetime.now(),
-                roll  = values[0],
-                pitch = values[1],
-                yaw   = values[2],
+                nav_roll  = values[0],
+                nav_pitch = values[1],
+                nav_yaw   = values[2],
+                source    = "TLM",
             )
 
             # 데이터 수신 카운터 증가
@@ -122,9 +123,6 @@ class HandlerCommTLM(QObject):
             self._append_debug_message(f"[TLM] CSV parse error: {line}")
         except Exception as e:
             self._append_debug_message(f"[TLM] Unexpected CSV error: {e}")
-
-    def _handle_debug_message(self, line):
-        self._append_debug_message(line)
 
     def _append_debug_message(self, line):
         """

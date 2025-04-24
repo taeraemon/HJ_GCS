@@ -51,11 +51,19 @@ class HandlerUI(QMainWindow, form_class):
         self.PB_TLM_SER_REFRESH.clicked.connect(self.refresh_tlm_ports)
         self.PB_GSE_SER_CONN.clicked.connect(self.on_gse_serial_connect_clicked)
         self.PB_GSE_SER_REFRESH.clicked.connect(self.refresh_gse_ports)
+        
+        # Source 버튼 클릭 이벤트 연결
+        self.PB_UMB_SOURCE.clicked.connect(self.on_umb_source_clicked)
+        self.PB_TLM_SOURCE.clicked.connect(self.on_tlm_source_clicked)
 
         # 버튼 초기 상태 설정
         self.PB_UMB_SER_CONN.setCheckable(True)
         self.PB_TLM_SER_CONN.setCheckable(True)
         self.PB_GSE_SER_CONN.setCheckable(True)
+        
+        # 초기 상태에서 UMB Source 버튼이 선택됨
+        self.PB_UMB_SOURCE.setChecked(True)
+        self.PB_TLM_SOURCE.setChecked(False)
 
     # ===== UMB 시리얼 연결 처리 =====
     def on_umb_serial_connect_clicked(self):
@@ -123,3 +131,36 @@ class HandlerUI(QMainWindow, form_class):
     def update_attitude(self, roll, pitch, yaw):
         """자세 데이터를 업데이트하고 3D 시각화를 갱신합니다."""
         self.attitude_visualizer.update_attitude(roll, pitch, yaw)
+
+    # ===== UMB/TLM 소스 선택 버튼 처리 =====
+    def on_umb_source_clicked(self):
+        # UMB Source 버튼이 클릭되었을 때
+        is_checked = self.PB_UMB_SOURCE.isChecked()
+        if is_checked:
+            # UMB가 선택되면 TLM은 해제
+            self.PB_TLM_SOURCE.setChecked(False)
+            # 컨트롤러에 액티브 소스 변경 알림
+            if self.controller:
+                self.controller.set_active_source('UMB')
+        else:
+            # UMB가 해제되면 TLM 선택
+            self.PB_TLM_SOURCE.setChecked(True)
+            # 컨트롤러에 액티브 소스 변경 알림
+            if self.controller:
+                self.controller.set_active_source('TLM')
+    
+    def on_tlm_source_clicked(self):
+        # TLM Source 버튼이 클릭되었을 때
+        is_checked = self.PB_TLM_SOURCE.isChecked()
+        if is_checked:
+            # TLM이 선택되면 UMB는 해제
+            self.PB_UMB_SOURCE.setChecked(False)
+            # 컨트롤러에 액티브 소스 변경 알림
+            if self.controller:
+                self.controller.set_active_source('TLM')
+        else:
+            # TLM이 해제되면 UMB 선택
+            self.PB_UMB_SOURCE.setChecked(True)
+            # 컨트롤러에 액티브 소스 변경 알림
+            if self.controller:
+                self.controller.set_active_source('UMB')
