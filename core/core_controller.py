@@ -6,7 +6,7 @@ from handler.handler_comm_umb import HandlerCommUMB
 from handler.handler_comm_tlm import HandlerCommTLM
 from handler.handler_comm_gse import HandlerCommGSE
 from handler.handler_plot import HandlerPlot
-# from handler.handler_log import HandlerLog
+from handler.handler_log import HandlerLog
 from utils.data_types import DataVehicle
 
 
@@ -19,7 +19,7 @@ class CoreController:
         self.umb_handler = HandlerCommUMB(self)
         self.tlm_handler = HandlerCommTLM(self)
         self.gse_handler = HandlerCommGSE(self)
-        # self.log_handler = HandlerLog()
+        self.log_handler = HandlerLog()
 
         # 플롯 핸들러 (Qt Designer에서 설정한 objectName 기준)
         self.plot_handler_cur_r = HandlerPlot(self.ui.PLOT_ROLL,  "Roll",  "deg")
@@ -51,6 +51,9 @@ class CoreController:
         self.plot_timer = QTimer()
         self.plot_timer.timeout.connect(self.update_plots)
         self.plot_timer.start(100)  # 100ms = 10Hz
+
+        # 로깅 버튼 이벤트 연결
+        self.ui.PB_LOG.clicked.connect(self.on_log_button_clicked)
 
     def start(self):
         """UI 실행"""
@@ -103,14 +106,38 @@ class CoreController:
         # GSE 데이터는 별도로 저장
         self.last_gse_data = data
 
+    def on_log_button_clicked(self):
+        """로깅 버튼 클릭 이벤트 처리"""
+        if not self.log_handler.is_logging:
+            # 연결된 소스 목록 생성
+            connected_sources = []
+            if self.umb_handler.serial_connected:
+                connected_sources.append('UMB')
+            if self.tlm_handler.serial_connected:
+                connected_sources.append('TLM')
+            if self.gse_handler.serial_connected:
+                connected_sources.append('GSE')
+
+            # 연결된 소스가 없으면 로깅 시작하지 않음
+            if not connected_sources:
+                self._append_debug_message("[CORE] No connected sources to log")
+                return
+
+            # 로깅 시작
+            if self.log_handler.start_logging(connected_sources):
+                self.ui.PB_LOG.setText("Logging...")
+                self._append_debug_message(f"[CORE] Logging started for sources: {', '.join(connected_sources)}")
+        else:
+            # 로깅 중지
+            if self.log_handler.stop_logging():
+                self.ui.PB_LOG.setText("LOG")
+                self._append_debug_message("[CORE] Logging stopped")
+
     def _log_data(self, data, source):
         """
         모든 데이터를 로깅하는 내부 메서드
-        실제 로깅 구현은 추후 추가
         """
-        # TODO: 실제 로깅 구현
-        # 잠시 주석처리: self.log_handler.append(data, source)
-        pass
+        self.log_handler.append(data, source)
     
     def process_vehicle_data(self, vehicle_data):
         """

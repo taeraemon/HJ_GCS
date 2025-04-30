@@ -63,17 +63,21 @@
      <string>Refresh</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="PB_TX_CALI">
+   <widget class="QPushButton" name="PB_LOG">
     <property name="geometry">
      <rect>
-      <x>940</x>
+      <x>750</x>
       <y>20</y>
-      <width>140</width>
-      <height>40</height>
+      <width>60</width>
+      <height>60</height>
      </rect>
     </property>
     <property name="text">
-     <string>Calibration</string>
+     <string>Start
+Logging</string>
+    </property>
+    <property name="checkable">
+     <bool>true</bool>
     </property>
    </widget>
    <widget class="QTextEdit" name="TE_GCS_DEBUG">
