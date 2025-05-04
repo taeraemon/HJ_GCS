@@ -22,6 +22,16 @@ class HandlerLabelGroup:
             "LB_PNID_PT_10": HandlerLabel(ui.LB_PNID_PT_10, "{:.2f}"),
             "LB_PNID_PT_11": HandlerLabel(ui.LB_PNID_PT_11, "{:.2f}"),
             "LB_PNID_PT_12": HandlerLabel(ui.LB_PNID_PT_12, "{:.2f}"),
+            "LB_PNID_TC_1": HandlerLabel(ui.LB_PNID_TC_1, "{:.2f}"),
+            "LB_PNID_TC_2": HandlerLabel(ui.LB_PNID_TC_2, "{:.2f}"),
+            "LB_PNID_TC_3": HandlerLabel(ui.LB_PNID_TC_3, "{:.2f}"),
+            "LB_PNID_TC_4": HandlerLabel(ui.LB_PNID_TC_4, "{:.2f}"),
+            "LB_PNID_TC_5": HandlerLabel(ui.LB_PNID_TC_5, "{:.2f}"),
+            "LB_PNID_TC_6": HandlerLabel(ui.LB_PNID_TC_6, "{:.2f}"),
+            "LB_PNID_TC_7": HandlerLabel(ui.LB_PNID_TC_7, "{:.2f}"),
+            "LB_PNID_TC_8": HandlerLabel(ui.LB_PNID_TC_8, "{:.2f}"),
+            "LB_PNID_TC_9": HandlerLabel(ui.LB_PNID_TC_9, "{:.2f}"),
+            "LB_PNID_TC_10": HandlerLabel(ui.LB_PNID_TC_10, "{:.2f}"),
         }
 
     def update_all(self, data: DataVehicle):
@@ -33,5 +43,11 @@ class HandlerLabelGroup:
         # Update QLabel values based on data.pt
         for i, value in enumerate(data.pt):
             label_name = f"LB_PNID_PT_{i+1}"
+            if label_name in self.handlers:
+                self.handlers[label_name].update(value)
+
+        # Update QLabel values based on data.tc
+        for i, value in enumerate(data.tc):
+            label_name = f"LB_PNID_TC_{i+1}"
             if label_name in self.handlers:
                 self.handlers[label_name].update(value)
