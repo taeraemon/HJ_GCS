@@ -286,12 +286,78 @@ Logging</string>
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab_1">
      <attribute name="title">
       <string>Tab 1</string>
      </attribute>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>40</y>
+        <width>1400</width>
+        <height>700</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="pixmap">
+       <pixmap>resources/pnid_v0.png</pixmap>
+      </property>
+     </widget>
+     <widget class="QLabel" name="LB_PNID_PT_1_NAME">
+      <property name="geometry">
+       <rect>
+        <x>950</x>
+        <y>30</y>
+        <width>80</width>
+        <height>40</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Box</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Plain</enum>
+      </property>
+      <property name="text">
+       <string>PT410</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+      <property name="wordWrap">
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QLabel" name="LB_PNID_PT_1">
+      <property name="geometry">
+       <rect>
+        <x>950</x>
+        <y>70</y>
+        <width>80</width>
+        <height>40</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Box</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Plain</enum>
+      </property>
+      <property name="text">
+       <string>200 bar</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+      <property name="wordWrap">
+       <bool>false</bool>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="tab_2">
      <attribute name="title">
@@ -853,6 +919,110 @@ Logging</string>
      <bool>false</bool>
     </property>
    </widget>
+   <widget class="QPushButton" name="PB_PNID_SV_1">
+    <property name="geometry">
+     <rect>
+      <x>850</x>
+      <y>160</y>
+      <width>80</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>SV1</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="PB_PNID_SV_2">
+    <property name="geometry">
+     <rect>
+      <x>930</x>
+      <y>160</y>
+      <width>80</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>SV2</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="PB_PNID_SV_3">
+    <property name="geometry">
+     <rect>
+      <x>1010</x>
+      <y>160</y>
+      <width>80</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>SV3</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="PB_PNID_SV_4">
+    <property name="geometry">
+     <rect>
+      <x>1090</x>
+      <y>160</y>
+      <width>80</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>SV4</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="PB_PNID_SV_5">
+    <property name="geometry">
+     <rect>
+      <x>850</x>
+      <y>190</y>
+      <width>80</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>SV5</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="PB_PNID_SV_6">
+    <property name="geometry">
+     <rect>
+      <x>930</x>
+      <y>190</y>
+      <width>80</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>SV6</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="PB_PNID_SV_7">
+    <property name="geometry">
+     <rect>
+      <x>1010</x>
+      <y>190</y>
+      <width>80</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>SV7</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="PB_PNID_SV_8">
+    <property name="geometry">
+     <rect>
+      <x>1090</x>
+      <y>190</y>
+      <width>80</width>
+      <height>30</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>SV8</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -874,6 +1044,8 @@ Logging</string>
    <container>1</container>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="resources/pnid_v0.png"/>
+ </resources>
  <connections/>
 </ui>

@@ -11,6 +11,7 @@ from handler.handler_log import HandlerLog
 from handler.plot.handler_plot_group import HandlerPlotGroup
 from handler.label.handler_label_group import HandlerLabelGroup
 from utils.data_types import DataVehicle, ReceivedPacket
+from handler.button.handler_button_group import HandlerButtonGroup
 
 
 class CoreController:
@@ -27,6 +28,9 @@ class CoreController:
         # 플롯 핸들러 (Qt Designer에서 설정한 objectName 기준)
         self.plot_group = HandlerPlotGroup(self.ui)
         self.label_group = HandlerLabelGroup(self.ui)
+
+        # 버튼 핸들러 (솔레노이드 밸브 관련)
+        self.button_group = HandlerButtonGroup(self.ui)
 
         # UI와 컨트롤러 연결
         self.ui.set_controller(self)
@@ -160,6 +164,7 @@ class CoreController:
         for data in new_data_list:
             self.plot_group.update_all(data)
             self.label_group.update_all(data)
+            self.button_group.update_all(data)
 
         self.last_plot_index = total_data
 
