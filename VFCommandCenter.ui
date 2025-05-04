@@ -172,7 +172,7 @@ Logging</string>
      <enum>QFrame::Plain</enum>
     </property>
     <property name="text">
-     <string>N Hz</string>
+     <string>NULL</string>
     </property>
     <property name="wordWrap">
      <bool>false</bool>
@@ -194,7 +194,7 @@ Logging</string>
      <enum>QFrame::Plain</enum>
     </property>
     <property name="text">
-     <string>N Hz</string>
+     <string>NULL</string>
     </property>
     <property name="wordWrap">
      <bool>false</bool>
@@ -216,7 +216,7 @@ Logging</string>
      <enum>QFrame::Plain</enum>
     </property>
     <property name="text">
-     <string>N Hz</string>
+     <string>NULL</string>
     </property>
     <property name="wordWrap">
      <bool>false</bool>
@@ -297,7 +297,7 @@ Logging</string>
      <attribute name="title">
       <string>Tab 2</string>
      </attribute>
-     <widget class="PlotWidget" name="PLOT_YAW_2" native="true">
+     <widget class="PlotWidget" name="PLOT_IMU_GYR_Z" native="true">
       <property name="geometry">
        <rect>
         <x>320</x>
@@ -307,7 +307,7 @@ Logging</string>
        </rect>
       </property>
      </widget>
-     <widget class="PlotWidget" name="PLOT_ROLL" native="true">
+     <widget class="PlotWidget" name="PLOT_NAV_ROLL" native="true">
       <property name="geometry">
        <rect>
         <x>20</x>
@@ -317,7 +317,7 @@ Logging</string>
        </rect>
       </property>
      </widget>
-     <widget class="PlotWidget" name="PLOT_ROLL_2" native="true">
+     <widget class="PlotWidget" name="PLOT_IMU_GYR_X" native="true">
       <property name="geometry">
        <rect>
         <x>320</x>
@@ -327,7 +327,7 @@ Logging</string>
        </rect>
       </property>
      </widget>
-     <widget class="PlotWidget" name="PLOT_PITCH_2" native="true">
+     <widget class="PlotWidget" name="PLOT_IMU_GYR_Y" native="true">
       <property name="geometry">
        <rect>
         <x>320</x>
@@ -337,7 +337,7 @@ Logging</string>
        </rect>
       </property>
      </widget>
-     <widget class="PlotWidget" name="PLOT_PITCH" native="true">
+     <widget class="PlotWidget" name="PLOT_NAV_PITCH" native="true">
       <property name="geometry">
        <rect>
         <x>20</x>
@@ -347,7 +347,7 @@ Logging</string>
        </rect>
       </property>
      </widget>
-     <widget class="PlotWidget" name="PLOT_YAW" native="true">
+     <widget class="PlotWidget" name="PLOT_NAV_YAW" native="true">
       <property name="geometry">
        <rect>
         <x>20</x>
@@ -470,11 +470,173 @@ Logging</string>
      <widget class="QOpenGLWidget" name="openGLWidget">
       <property name="geometry">
        <rect>
-        <x>889</x>
-        <y>259</y>
+        <x>1050</x>
+        <y>380</y>
         <width>481</width>
         <height>381</height>
        </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="LB_UMB_RATE_2">
+      <property name="geometry">
+       <rect>
+        <x>1300</x>
+        <y>40</y>
+        <width>140</width>
+        <height>60</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Box</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Plain</enum>
+      </property>
+      <property name="text">
+       <string>NULL</string>
+      </property>
+      <property name="wordWrap">
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QLabel" name="LB_UMB_RATE_3">
+      <property name="geometry">
+       <rect>
+        <x>1300</x>
+        <y>100</y>
+        <width>140</width>
+        <height>60</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Box</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Plain</enum>
+      </property>
+      <property name="text">
+       <string>NULL</string>
+      </property>
+      <property name="wordWrap">
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="PlotWidget" name="PLOT_IMU_ACC_Y" native="true">
+      <property name="geometry">
+       <rect>
+        <x>620</x>
+        <y>240</y>
+        <width>300</width>
+        <height>200</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="PlotWidget" name="PLOT_IMU_ACC_Z" native="true">
+      <property name="geometry">
+       <rect>
+        <x>620</x>
+        <y>440</y>
+        <width>300</width>
+        <height>200</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="PlotWidget" name="PLOT_IMU_ACC_X" native="true">
+      <property name="geometry">
+       <rect>
+        <x>620</x>
+        <y>40</y>
+        <width>300</width>
+        <height>200</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="LB_GPS_LAT">
+      <property name="geometry">
+       <rect>
+        <x>920</x>
+        <y>40</y>
+        <width>140</width>
+        <height>60</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Box</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Plain</enum>
+      </property>
+      <property name="text">
+       <string>NULL</string>
+      </property>
+      <property name="wordWrap">
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QLabel" name="LB_GPS_LON">
+      <property name="geometry">
+       <rect>
+        <x>920</x>
+        <y>100</y>
+        <width>140</width>
+        <height>60</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Box</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Plain</enum>
+      </property>
+      <property name="text">
+       <string>NULL</string>
+      </property>
+      <property name="wordWrap">
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QLabel" name="LB_GPS_ALT">
+      <property name="geometry">
+       <rect>
+        <x>920</x>
+        <y>160</y>
+        <width>140</width>
+        <height>60</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Box</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Plain</enum>
+      </property>
+      <property name="text">
+       <string>NULL</string>
+      </property>
+      <property name="wordWrap">
+       <bool>false</bool>
+      </property>
+     </widget>
+     <widget class="QLabel" name="LB_GPS_SAT">
+      <property name="geometry">
+       <rect>
+        <x>920</x>
+        <y>220</y>
+        <width>140</width>
+        <height>60</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Box</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Plain</enum>
+      </property>
+      <property name="text">
+       <string>NULL</string>
+      </property>
+      <property name="wordWrap">
+       <bool>false</bool>
       </property>
      </widget>
     </widget>

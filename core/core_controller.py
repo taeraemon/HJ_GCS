@@ -6,6 +6,7 @@ from handler.handler_comm_umb import HandlerCommUMB
 from handler.handler_comm_tlm import HandlerCommTLM
 from handler.handler_comm_gse import HandlerCommGSE
 from handler.handler_plot import HandlerPlot
+from handler.handler_label import HandlerLabel
 from handler.handler_log import HandlerLog
 from utils.data_types import DataVehicle, ReceivedPacket
 
@@ -22,9 +23,22 @@ class CoreController:
         self.log_handler = HandlerLog()
 
         # 플롯 핸들러 (Qt Designer에서 설정한 objectName 기준)
-        self.plot_handler_cur_r = HandlerPlot(self.ui.PLOT_ROLL,  "Roll",  "deg")
-        self.plot_handler_cur_p = HandlerPlot(self.ui.PLOT_PITCH, "Pitch", "deg")
-        self.plot_handler_cur_y = HandlerPlot(self.ui.PLOT_YAW,   "Yaw",   "deg")
+        self.plot_handler_nav_r = HandlerPlot(self.ui.PLOT_NAV_ROLL,  "Roll",  "deg")
+        self.plot_handler_nav_p = HandlerPlot(self.ui.PLOT_NAV_PITCH, "Pitch", "deg")
+        self.plot_handler_nav_y = HandlerPlot(self.ui.PLOT_NAV_YAW,   "Yaw",   "deg")
+
+        self.plot_handler_imu_gyr_x = HandlerPlot(self.ui.PLOT_IMU_GYR_X, "Roll",  "deg")
+        self.plot_handler_imu_gyr_y = HandlerPlot(self.ui.PLOT_IMU_GYR_Y, "Pitch", "deg")
+        self.plot_handler_imu_gyr_z = HandlerPlot(self.ui.PLOT_IMU_GYR_Z, "Yaw",   "deg")
+
+        self.plot_handler_imu_acc_x = HandlerPlot(self.ui.PLOT_IMU_ACC_X, "Roll",  "deg")
+        self.plot_handler_imu_acc_y = HandlerPlot(self.ui.PLOT_IMU_ACC_Y, "Pitch", "deg")
+        self.plot_handler_imu_acc_z = HandlerPlot(self.ui.PLOT_IMU_ACC_Z, "Yaw",   "deg")
+        
+        self.label_handler_gps_lat   = HandlerLabel(self.ui.LB_GPS_LAT, "{:.6f}")
+        self.label_handler_gps_lon   = HandlerLabel(self.ui.LB_GPS_LON, "{:.6f}")
+        self.label_handler_gps_alt   = HandlerLabel(self.ui.LB_GPS_ALT, "{:.2f} m")
+        self.label_handler_gps_sat   = HandlerLabel(self.ui.LB_GPS_SAT, "{} sats")
 
         # UI와 컨트롤러 연결
         self.ui.set_controller(self)
@@ -184,9 +198,22 @@ class CoreController:
         # 새로 들어온 데이터 모두 plot에 반영
         new_data_list = self.vehicle_data_history[self.last_plot_index:]
         for data in new_data_list:
-            self.plot_handler_cur_r.update_plot(data.nav_roll)
-            self.plot_handler_cur_p.update_plot(data.nav_pitch)
-            self.plot_handler_cur_y.update_plot(data.nav_yaw)
+            self.plot_handler_nav_r.update_plot(data.nav_roll)
+            self.plot_handler_nav_p.update_plot(data.nav_pitch)
+            self.plot_handler_nav_y.update_plot(data.nav_yaw)
+
+            self.plot_handler_imu_gyr_x.update_plot(data.imu_gyr_x)
+            self.plot_handler_imu_gyr_y.update_plot(data.imu_gyr_y)
+            self.plot_handler_imu_gyr_z.update_plot(data.imu_gyr_z)
+
+            self.plot_handler_imu_acc_x.update_plot(data.imu_acc_x)
+            self.plot_handler_imu_acc_y.update_plot(data.imu_acc_y)
+            self.plot_handler_imu_acc_z.update_plot(data.imu_acc_z)
+
+            self.label_handler_gps_lat.update(data.gps_lat)
+            self.label_handler_gps_lon.update(data.gps_lon)
+            self.label_handler_gps_alt.update(data.gps_alt)
+            self.label_handler_gps_sat.update(data.gps_sat)
 
         # 마지막 인덱스 갱신
         self.last_plot_index = total_data

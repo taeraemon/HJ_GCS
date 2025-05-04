@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from typing import List, Tuple
 
@@ -11,10 +11,35 @@ class DataGSE:
 
 @dataclass
 class DataVehicle:
-    nav_roll: float
-    nav_pitch: float
-    nav_yaw: float
+    imu_gyr_x: float = 0.0
+    imu_gyr_y: float = 0.0
+    imu_gyr_z: float = 0.0
+    imu_acc_x: float = 0.0
+    imu_acc_y: float = 0.0
+    imu_acc_z: float = 0.0
 
+    gps_lat: float = 0.0
+    gps_lon: float = 0.0
+    gps_alt: float = 0.0
+    gps_sat: int = 0
+    gps_fix_type: int = 0
+    gps_fix_quality: int = 0
+    gps_hdop: float = 0.0
+    gps_vdop: float = 0.0
+    gps_pdop: float = 0.0
+    gps_time: str = ""
+    gps_constellation: str = ""
+
+    nav_roll: float = 0.0
+    nav_pitch: float = 0.0
+    nav_yaw: float = 0.0
+    nav_lat: float = 0.0
+    nav_lon: float = 0.0
+    nav_alt: float = 0.0
+
+    sv: List[float] = field(default_factory=lambda: [-1.0] * 8)
+    pt: List[float] = field(default_factory=lambda: [-1.0] * 12)
+    tc: List[float] = field(default_factory=lambda: [-1.0] * 10)
 @dataclass
 class ReceivedPacket:
     data: DataVehicle
