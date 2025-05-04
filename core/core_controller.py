@@ -2,12 +2,14 @@ from PyQt5.QtCore import QTimer
 from datetime import datetime
 
 from handler.handler_ui import HandlerUI
-from handler.handler_comm_umb import HandlerCommUMB
-from handler.handler_comm_tlm import HandlerCommTLM
-from handler.handler_comm_gse import HandlerCommGSE
-from handler.handler_plot import HandlerPlot
-from handler.handler_label import HandlerLabel
+from handler.comm.handler_comm_umb import HandlerCommUMB
+from handler.comm.handler_comm_tlm import HandlerCommTLM
+from handler.comm.handler_comm_gse import HandlerCommGSE
+from handler.plot.handler_plot import HandlerPlot
+from handler.label.handler_label import HandlerLabel
 from handler.handler_log import HandlerLog
+from handler.plot.handler_plot_group import HandlerPlotGroup
+from handler.label.handler_label_group import HandlerLabelGroup
 from utils.data_types import DataVehicle, ReceivedPacket
 
 
@@ -23,22 +25,8 @@ class CoreController:
         self.log_handler = HandlerLog()
 
         # 플롯 핸들러 (Qt Designer에서 설정한 objectName 기준)
-        self.plot_handler_nav_r = HandlerPlot(self.ui.PLOT_NAV_ROLL,  "Roll",  "deg")
-        self.plot_handler_nav_p = HandlerPlot(self.ui.PLOT_NAV_PITCH, "Pitch", "deg")
-        self.plot_handler_nav_y = HandlerPlot(self.ui.PLOT_NAV_YAW,   "Yaw",   "deg")
-
-        self.plot_handler_imu_gyr_x = HandlerPlot(self.ui.PLOT_IMU_GYR_X, "Roll",  "deg")
-        self.plot_handler_imu_gyr_y = HandlerPlot(self.ui.PLOT_IMU_GYR_Y, "Pitch", "deg")
-        self.plot_handler_imu_gyr_z = HandlerPlot(self.ui.PLOT_IMU_GYR_Z, "Yaw",   "deg")
-
-        self.plot_handler_imu_acc_x = HandlerPlot(self.ui.PLOT_IMU_ACC_X, "Roll",  "deg")
-        self.plot_handler_imu_acc_y = HandlerPlot(self.ui.PLOT_IMU_ACC_Y, "Pitch", "deg")
-        self.plot_handler_imu_acc_z = HandlerPlot(self.ui.PLOT_IMU_ACC_Z, "Yaw",   "deg")
-        
-        self.label_handler_gps_lat   = HandlerLabel(self.ui.LB_GPS_LAT, "{:.6f}")
-        self.label_handler_gps_lon   = HandlerLabel(self.ui.LB_GPS_LON, "{:.6f}")
-        self.label_handler_gps_alt   = HandlerLabel(self.ui.LB_GPS_ALT, "{:.2f} m")
-        self.label_handler_gps_sat   = HandlerLabel(self.ui.LB_GPS_SAT, "{} sats")
+        self.plot_group = HandlerPlotGroup(self.ui)
+        self.label_group = HandlerLabelGroup(self.ui)
 
         # UI와 컨트롤러 연결
         self.ui.set_controller(self)
@@ -165,50 +153,29 @@ class CoreController:
         # 3. 데이터는 계속 수집하되 UI 업데이트만 조건부로 실행
         # 4. 모든 탭에 필요한 공통 UI 요소(상태 표시창 등)는 항상 업데이트
         total_data = len(self.vehicle_data_history)
-
-        # 새로운 데이터가 없다면 종료
         if self.last_plot_index >= total_data:
             return
 
-        # 새로 들어온 데이터 모두 plot에 반영
         new_data_list = self.vehicle_data_history[self.last_plot_index:]
         for data in new_data_list:
-            self.plot_handler_nav_r.update_plot(data.nav_roll)
-            self.plot_handler_nav_p.update_plot(data.nav_pitch)
-            self.plot_handler_nav_y.update_plot(data.nav_yaw)
+            self.plot_group.update_all(data)
+            self.label_group.update_all(data)
 
-            self.plot_handler_imu_gyr_x.update_plot(data.imu_gyr_x)
-            self.plot_handler_imu_gyr_y.update_plot(data.imu_gyr_y)
-            self.plot_handler_imu_gyr_z.update_plot(data.imu_gyr_z)
-
-            self.plot_handler_imu_acc_x.update_plot(data.imu_acc_x)
-            self.plot_handler_imu_acc_y.update_plot(data.imu_acc_y)
-            self.plot_handler_imu_acc_z.update_plot(data.imu_acc_z)
-
-            self.label_handler_gps_lat.update(data.gps_lat)
-            self.label_handler_gps_lon.update(data.gps_lon)
-            self.label_handler_gps_alt.update(data.gps_alt)
-            self.label_handler_gps_sat.update(data.gps_sat)
-
-        # 마지막 인덱스 갱신
         self.last_plot_index = total_data
-        
-        # 가장 최신 데이터로 3D 자세 시각화 업데이트
+
         if self.last_vehicle_data:
             self.ui.update_attitude(
                 self.last_vehicle_data.nav_roll,
                 self.last_vehicle_data.nav_pitch,
                 self.last_vehicle_data.nav_yaw
             )
-            
-            # 상태 표시창 업데이트 - 최신 데이터로
+
             self.update_status_vehicle(ReceivedPacket(
                 data=self.last_vehicle_data,
-                timestamp=datetime.now(),  # Use the correct timestamp
+                timestamp=datetime.now(),
                 source=self.active_source
             ), f"{self.active_source} Data")
-            
-        # GSE 데이터가 있다면 해당 상태도 업데이트  # TODO : 추후 구현
+
         if hasattr(self, 'last_gse_data') and self.last_gse_data:
             self.update_status_gse(self.last_gse_data, "GSE Data")
 

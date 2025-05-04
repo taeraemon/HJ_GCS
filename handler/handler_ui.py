@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import QMainWindow, QVBoxLayout, QWidget
 from PyQt5 import uic
 from PyQt5.QtSerialPort import QSerialPortInfo
 import os
-from handler.handler_plot_3d import HandlerPlot3D
+from handler.plot.handler_plot_3d import HandlerPlot3D
 
 # ===== UI 파일 로딩 =====
 UI_PATH = os.path.join(os.path.dirname(__file__), "../VFCommandCenter.ui")
