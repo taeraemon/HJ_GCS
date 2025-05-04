@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QMessageBox
 import json
 from datetime import datetime
 
-from utils.data_types import DataVehicle, parse_csv_to_vehicle
+from utils.data_types import DataVehicle, parse_csv_to_vehicle, ReceivedPacket
 
 
 class HandlerCommUMB(QObject):
@@ -98,11 +98,11 @@ class HandlerCommUMB(QObject):
         CSV 형식: 예) 1.23,2.34,3.45,...,13.37
         """
         try:
-            data = parse_csv_to_vehicle(line, source="UMB")
+            packet = parse_csv_to_vehicle(line, source="UMB")
             self.packet_count += 1
-            self.controller.on_umb_data_received(data)
+            self.controller.on_umb_data_received(packet.data)
         except ValueError as e:
-            self._append_debug_message(f"[UMB] CSV parse error:{line}")
+            self._append_debug_message(f"[UMB] {e}")
         except Exception as e:
             self._append_debug_message(f"[UMB] Unexpected CSV error: {e}")
 

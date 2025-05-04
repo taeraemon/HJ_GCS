@@ -11,13 +11,17 @@ class DataGSE:
 
 @dataclass
 class DataVehicle:
+    nav_roll: float
+    nav_pitch: float
+    nav_yaw: float
+
+@dataclass
+class ReceivedPacket:
+    data: DataVehicle
     timestamp: datetime
-    nav_roll  : float
-    nav_pitch : float
-    nav_yaw   : float
-    source    : str
-    
-def parse_csv_to_vehicle(line: str, source: str) -> DataVehicle:
+    source: str
+
+def parse_csv_to_vehicle(line: str, source: str) -> ReceivedPacket:
     try:
         parts = line.strip().split(',')
         if len(parts) < 3:
@@ -25,12 +29,16 @@ def parse_csv_to_vehicle(line: str, source: str) -> DataVehicle:
 
         values = list(map(float, parts[:3]))
 
-        return DataVehicle(
-            timestamp=datetime.now(),
+        data_vehicle = DataVehicle(
             nav_roll=values[0],
             nav_pitch=values[1],
-            nav_yaw=values[2],
-            source=source,
+            nav_yaw=values[2]
+        )
+
+        return ReceivedPacket(
+            data=data_vehicle,
+            timestamp=datetime.now(),
+            source=source
         )
     except Exception as e:
         raise ValueError(f"CSV parsing failed: {e}")

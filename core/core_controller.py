@@ -7,7 +7,7 @@ from handler.handler_comm_tlm import HandlerCommTLM
 from handler.handler_comm_gse import HandlerCommGSE
 from handler.handler_plot import HandlerPlot
 from handler.handler_log import HandlerLog
-from utils.data_types import DataVehicle
+from utils.data_types import DataVehicle, ReceivedPacket
 
 
 class CoreController:
@@ -200,7 +200,11 @@ class CoreController:
             )
             
             # 상태 표시창 업데이트 - 최신 데이터로
-            self.update_status_vehicle(self.last_vehicle_data, f"{self.active_source} Data")
+            self.update_status_vehicle(ReceivedPacket(
+                data=self.last_vehicle_data,
+                timestamp=datetime.now(),  # Use the correct timestamp
+                source=self.active_source
+            ), f"{self.active_source} Data")
             
         # GSE 데이터가 있다면 해당 상태도 업데이트  # TODO : 추후 구현
         if hasattr(self, 'last_gse_data') and self.last_gse_data:
@@ -254,7 +258,7 @@ class CoreController:
         text_edit.setPlainText('\n'.join(lines).strip())
         text_edit.verticalScrollBar().setValue(text_edit.verticalScrollBar().maximum())
 
-    def update_status_vehicle(self, data: DataVehicle, message: str):
+    def update_status_vehicle(self, packet: ReceivedPacket, message: str):
         """
         TE_VEHICLE_STATUS에 차량 상태 데이터를 JSON 형식으로 표시
         이전 내용을 지우고 현재 상태만 표시함
@@ -271,12 +275,12 @@ class CoreController:
         # JSON 형식으로 데이터 표시
         json_like_data = (
             f"[{curr_time}] [CORE] {message}:\n"
-            f"  timestamp: {data.timestamp}\n"
-            f"  source: {data.source}\n"
+            f"  timestamp: {packet.timestamp}\n"
+            f"  source: {packet.source}\n"
             f"  attitude: {{\n"
-            f"    roll: {data.nav_roll:.2f}°,\n"
-            f"    pitch: {data.nav_pitch:.2f}°,\n"
-            f"    yaw: {data.nav_yaw:.2f}°\n"
+            f"    roll: {packet.data.nav_roll:.2f}°,\n"
+            f"    pitch: {packet.data.nav_pitch:.2f}°,\n"
+            f"    yaw: {packet.data.nav_yaw:.2f}°\n"
             f"  }}"
         )
         

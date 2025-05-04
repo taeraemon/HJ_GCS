@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QMessageBox
 import json
 from datetime import datetime
 
-from utils.data_types import DataVehicle
+from utils.data_types import DataVehicle, ReceivedPacket
 from utils.data_types import parse_csv_to_vehicle
 
 class HandlerCommTLM(QObject):
@@ -95,11 +95,11 @@ class HandlerCommTLM(QObject):
 
     def _handle_csv_packet(self, line):
         try:
-            data = parse_csv_to_vehicle(line, source="TLM")
+            packet = parse_csv_to_vehicle(line, source="TLM")
             self.packet_count += 1
-            self.controller.on_tlm_data_received(data)
+            self.controller.on_tlm_data_received(packet.data)
         except ValueError as e:
-            self._append_debug_message(f"[TLM] CSV parse error: {line}")
+            self._append_debug_message(f"[TLM] {e}")
         except Exception as e:
             self._append_debug_message(f"[TLM] Unexpected CSV error: {e}")
 
