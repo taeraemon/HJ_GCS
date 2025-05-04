@@ -5,7 +5,7 @@ import json
 from datetime import datetime
 
 from utils.data_types import DataVehicle
-
+from utils.data_types import parse_csv_to_vehicle
 
 class HandlerCommTLM(QObject):
     def __init__(self, controller):
@@ -94,32 +94,11 @@ class HandlerCommTLM(QObject):
                 self._append_debug_message(f"[TLM] Error while reading serial data: {e}")
 
     def _handle_csv_packet(self, line):
-        """
-        CSV 형식: 예) 1000.0,50.0,25.0,1013.25,12.5
-        """
         try:
-            parts = line.split(',')
-            if len(parts) < 3:
-                self._append_debug_message(f"[TLM] Incomplete CSV packet: {line}")
-                return
-
-            values = list(map(float, parts[:3]))
-
-            tlm_data = DataVehicle(
-                timestamp=datetime.now(),
-                nav_roll  = values[0],
-                nav_pitch = values[1],
-                nav_yaw   = values[2],
-                source    = "TLM",
-            )
-
-            # 데이터 수신 카운터 증가
+            data = parse_csv_to_vehicle(line, source="TLM")
             self.packet_count += 1
-
-            # 핵심: CoreController에 전달
-            self.controller.on_tlm_data_received(tlm_data)
-
-        except ValueError:
+            self.controller.on_tlm_data_received(data)
+        except ValueError as e:
             self._append_debug_message(f"[TLM] CSV parse error: {line}")
         except Exception as e:
             self._append_debug_message(f"[TLM] Unexpected CSV error: {e}")

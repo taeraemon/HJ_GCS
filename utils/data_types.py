@@ -17,7 +17,26 @@ class DataVehicle:
     nav_yaw   : float
     source    : str
     
-    
+def parse_csv_to_vehicle(line: str, source: str) -> DataVehicle:
+    try:
+        parts = line.strip().split(',')
+        if len(parts) < 3:
+            raise ValueError("Incomplete CSV data")
+
+        values = list(map(float, parts[:3]))
+
+        return DataVehicle(
+            timestamp=datetime.now(),
+            nav_roll=values[0],
+            nav_pitch=values[1],
+            nav_yaw=values[2],
+            source=source,
+        )
+    except Exception as e:
+        raise ValueError(f"CSV parsing failed: {e}")
+
+
+
     # # ===== 시간 관련 =====
     # timestamp: datetime
     # boot_time: float            # 부팅 후 경과 시간 (초)

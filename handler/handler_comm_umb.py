@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import QMessageBox
 import json
 from datetime import datetime
 
-from utils.data_types import DataVehicle
+from utils.data_types import DataVehicle, parse_csv_to_vehicle
 
 
 class HandlerCommUMB(QObject):
@@ -98,29 +98,11 @@ class HandlerCommUMB(QObject):
         CSV 형식: 예) 1.23,2.34,3.45,...,13.37
         """
         try:
-            parts = line.split(',')
-            if len(parts) < 3:
-                self._append_debug_message(f"[UMB] Incomplete CSV packet: {line}")
-                return
-
-            values = list(map(float, parts[:3]))
-
-            umb_data = DataVehicle(
-                timestamp=datetime.now(),
-                nav_roll  = values[0],
-                nav_pitch = values[1],
-                nav_yaw   = values[2],
-                source    = "UMB",
-            )
-
-            # 데이터 수신 카운터 증가
+            data = parse_csv_to_vehicle(line, source="UMB")
             self.packet_count += 1
-
-            # 핵심: CoreController에 전달
-            self.controller.on_umb_data_received(umb_data)
-
-        except ValueError:
-            self._append_debug_message(f"[UMB] CSV parse error: {line}")
+            self.controller.on_umb_data_received(data)
+        except ValueError as e:
+            self._append_debug_message(f"[UMB] CSV parse error:{line}")
         except Exception as e:
             self._append_debug_message(f"[UMB] Unexpected CSV error: {e}")
 
