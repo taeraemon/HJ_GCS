@@ -73,46 +73,21 @@ class CoreController:
         """UI 실행"""
         self.ui.show()
 
-    def on_umb_data_received(self, data: DataVehicle):
-        """
-        시리얼로부터 UMB 데이터 수신 시 호출됨
-        → 모든 데이터는 저장하고, rate에 따라 GUI 업데이트 여부 결정
-        """
-        # 데이터 저장 - 항상 저장
-        self.last_umb_data = data
-        self.umb_data_history.append(data)
-        
-        # 데이터 로깅 - 항상 로깅
-        self._log_data(data, 'UMB')
-        
-        # UMB 데이터 최대 개수 제한
-        if len(self.umb_data_history) > 1000:
-            self.umb_data_history.pop(0)
-        
-        # 현재 액티브 소스가 UMB면 데이터 처리 (GUI 업데이트)
-        if self.active_source == 'UMB':
-            # GUI 업데이트 
-            self.process_vehicle_data(data)
+    def on_data_received(self, data: DataVehicle, source: str):
+        if source == 'UMB':
+            self.last_umb_data = data
+            self.umb_data_history.append(data)
+            if len(self.umb_data_history) > 1000:
+                self.umb_data_history.pop(0)
+        elif source == 'TLM':
+            self.last_tlm_data = data
+            self.tlm_data_history.append(data)
+            if len(self.tlm_data_history) > 1000:
+                self.tlm_data_history.pop(0)
 
-    def on_tlm_data_received(self, data: DataVehicle):
-        """
-        무선 텔레메트리로부터 TLM 데이터 수신 시 호출됨
-        → 모든 데이터는 저장하고, rate에 따라 GUI 업데이트 여부 결정
-        """
-        # 데이터 저장 - 항상 저장
-        self.last_tlm_data = data
-        self.tlm_data_history.append(data)
-        
-        # 데이터 로깅 - 항상 로깅
-        self._log_data(data, 'TLM')
-        
-        # TLM 데이터 최대 개수 제한
-        if len(self.tlm_data_history) > 1000:
-            self.tlm_data_history.pop(0)
-        
-        # 현재 액티브 소스가 TLM이면 데이터 처리 (GUI 업데이트)
-        if self.active_source == 'TLM':
-            # GUI 업데이트
+        self._log_data(data, source)
+
+        if self.active_source == source:
             self.process_vehicle_data(data)
 
     def on_gse_data_received(self, data):

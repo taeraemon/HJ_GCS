@@ -97,7 +97,7 @@ class HandlerCommTLM(QObject):
         try:
             packet = parse_csv_to_vehicle(line, source="TLM")
             self.packet_count += 1
-            self.controller.on_tlm_data_received(packet.data)
+            self.controller.on_data_received(packet.data, source="TLM")
         except ValueError as e:
             self._append_debug_message(f"[TLM] {e}")
         except Exception as e:
