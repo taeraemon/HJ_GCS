@@ -160,13 +160,17 @@ class CoreController:
         if self.last_plot_index >= total_data:
             return
 
-        new_data_list = self.vehicle_data_history[self.last_plot_index:]
-        for data in new_data_list:
-            self.plot_group.update_all(data)
-            self.label_group.update_all(data)
-            self.button_group.update_all(data)
+        # new_data_list = self.vehicle_data_history[self.last_plot_index:]
+        # for data in new_data_list:
+        #     self.plot_group.update_data_all(data)
+        #     # self.label_group.update_all(data)
+        #     # self.button_group.update_all(data)
+        
+        # self.plot_group.update_plot_all(data)
 
         self.last_plot_index = total_data
+
+        self.plot_group.update_plot_from_history_all(self.vehicle_data_history)
 
         if self.last_vehicle_data:
             self.ui.update_attitude(
