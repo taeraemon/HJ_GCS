@@ -4,6 +4,8 @@
 로켓/비행체 모니터링용 지상관제시스템. PyQt5 기반으로 시리얼 통신으로 데이터 수신 및 시각화함.
 
 ## 설치방법
+pyenv+venv 기반으로 진행됨. (파이썬 버전 3.10으로 테스트됨)
+
 ```bash
 pip install PyQt5 pyqtgraph PyOpenGL PyOpenGL_accelerate
 ```
